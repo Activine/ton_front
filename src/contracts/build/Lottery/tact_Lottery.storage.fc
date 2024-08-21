@@ -1,0 +1,394 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: Context
+;; TLB: _ bounced:bool sender:address value:int257 raw:^slice = Context
+;;
+
+_ $Context$_get_value((int, slice, int, slice) v) inline {
+    var (v'bounced, v'sender, v'value, v'raw) = v;
+    return v'value;
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
+    return ($bounce, $to, $value, $mode, $body, $code, $data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_body_value_mode(slice $to, cell $body, int $value, int $mode) inline {
+    return (true, $to, $value, $mode, $body, null(), null());
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
+}
+
+;;
+;; Type: Transfer
+;; Header: 0x0f817ea5
+;; TLB: transfer#0f817ea5 query_id:uint64 amount:coins destination:address response_destination:address custom_payload:Maybe ^cell forward_ton_amount:coins = Transfer
+;;
+
+builder $Transfer$_store(builder build_0, (int, int, slice, slice, cell, int) v) inline_ref {
+    var (v'query_id, v'amount, v'destination, v'response_destination, v'custom_payload, v'forward_ton_amount) = v;
+    build_0 = store_uint(build_0, 260144805, 32);
+    build_0 = build_0.store_uint(v'query_id, 64);
+    build_0 = build_0.store_coins(v'amount);
+    build_0 = __tact_store_address(build_0, v'destination);
+    build_0 = __tact_store_address(build_0, v'response_destination);
+    build_0 = ~ null?(v'custom_payload) ? build_0.store_int(true, 1).store_ref(v'custom_payload) : build_0.store_int(false, 1);
+    build_0 = build_0.store_coins(v'forward_ton_amount);
+    return build_0;
+}
+
+cell $Transfer$_store_cell((int, int, slice, slice, cell, int) v) inline {
+    return $Transfer$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, slice, slice, cell, int)) $Transfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount(int $query_id, int $amount, slice $destination, slice $response_destination, cell $custom_payload, int $forward_ton_amount) inline {
+    return ($query_id, $amount, $destination, $response_destination, $custom_payload, $forward_ton_amount);
+}
+
+;;
+;; Type: RequestNftDeploy
+;; Header: 0x5412742a
+;; TLB: request_nft_deploy#5412742a index:uint256 amount:coins owner:address content:^cell = RequestNftDeploy
+;;
+
+builder $RequestNftDeploy$_store(builder build_0, (int, int, slice, cell) v) inline {
+    var (v'index, v'amount, v'owner, v'content) = v;
+    build_0 = store_uint(build_0, 1410495530, 32);
+    build_0 = build_0.store_uint(v'index, 256);
+    build_0 = build_0.store_coins(v'amount);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_ref(v'content);
+    return build_0;
+}
+
+cell $RequestNftDeploy$_store_cell((int, int, slice, cell) v) inline {
+    return $RequestNftDeploy$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, slice, cell)) $RequestNftDeploy$_constructor_index_amount_owner_content(int $index, int $amount, slice $owner, cell $content) inline {
+    return ($index, $amount, $owner, $content);
+}
+
+;;
+;; Type: SetLotteryData
+;; Header: 0xf266e5f9
+;; TLB: set_lottery_data#f266e5f9 first:uint8 second:uint8 third:uint8 match:uint8 = SetLotteryData
+;;
+
+builder $SetLotteryData$_store(builder build_0, (int, int, int, int) v) inline {
+    var (v'first, v'second, v'third, v'match) = v;
+    build_0 = store_uint(build_0, 4066829817, 32);
+    build_0 = build_0.store_uint(v'first, 8);
+    build_0 = build_0.store_uint(v'second, 8);
+    build_0 = build_0.store_uint(v'third, 8);
+    build_0 = build_0.store_uint(v'match, 8);
+    return build_0;
+}
+
+cell $SetLotteryData$_store_cell((int, int, int, int) v) inline {
+    return $SetLotteryData$_store(begin_cell(), v).end_cell();
+}
+
+((int, int, int, int)) $SetLotteryData$_constructor_first_second_third_match(int $first, int $second, int $third, int $match) inline {
+    return ($first, $second, $third, $match);
+}
+
+;;
+;; Type: SetData
+;; Header: 0x4983f3dc
+;; TLB: set_data#4983f3dc nftAddress:address jettonAddress:address = SetData
+;;
+
+(slice, ((slice, slice))) $SetData$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1233384412);
+    var v'nftAddress = sc_0~__tact_load_address();
+    var v'jettonAddress = sc_0~__tact_load_address();
+    return (sc_0, (v'nftAddress, v'jettonAddress));
+}
+
+;;
+;; Type: BuyToken
+;; Header: 0x10e5cef8
+;; TLB: buy_token#10e5cef8 query_id:uint64 amount:coins custom_payload:Maybe ^cell forward_ton_amount:coins = BuyToken
+;;
+
+(slice, ((int, int, cell, int))) $BuyToken$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 283496184);
+    var v'query_id = sc_0~load_uint(64);
+    var v'amount = sc_0~load_coins();
+    var v'custom_payload = sc_0~load_int(1) ? sc_0~load_ref() : null();
+    var v'forward_ton_amount = sc_0~load_coins();
+    return (sc_0, (v'query_id, v'amount, v'custom_payload, v'forward_ton_amount));
+}
+
+;;
+;; Type: BuyTicket
+;; Header: 0xc7a777ac
+;; TLB: buy_ticket#c7a777ac query_id:uint64 amount:coins destination:address response_destination:address custom_payload:Maybe ^cell forward_ton_amount:coins contentNft:^cell value:coins = BuyTicket
+;;
+
+(slice, ((int, int, slice, slice, cell, int, cell, int))) $BuyTicket$_load(slice sc_0) inline_ref {
+    throw_unless(129, sc_0~load_uint(32) == 3349641132);
+    var v'query_id = sc_0~load_uint(64);
+    var v'amount = sc_0~load_coins();
+    var v'destination = sc_0~__tact_load_address();
+    var v'response_destination = sc_0~__tact_load_address();
+    var v'custom_payload = sc_0~load_int(1) ? sc_0~load_ref() : null();
+    var v'forward_ton_amount = sc_0~load_coins();
+    var v'contentNft = sc_0~load_ref();
+    var v'value = sc_0~load_coins();
+    return (sc_0, (v'query_id, v'amount, v'destination, v'response_destination, v'custom_payload, v'forward_ton_amount, v'contentNft, v'value));
+}
+
+;;
+;; Type: CheckTicket
+;; Header: 0xfc7d006a
+;; TLB: check_ticket#fc7d006a query_id:uint64 index:uint256 = CheckTicket
+;;
+
+(slice, ((int, int))) $CheckTicket$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 4236050538);
+    var v'query_id = sc_0~load_uint(64);
+    var v'index = sc_0~load_uint(256);
+    return (sc_0, (v'query_id, v'index));
+}
+
+;;
+;; Type: GetTicketStatus
+;; Header: 0x2a3a2357
+;; TLB: get_ticket_status#2a3a2357 query_id:uint64 status:bool index:uint256 = GetTicketStatus
+;;
+
+(slice, ((int, int, int))) $GetTicketStatus$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 708453207);
+    var v'query_id = sc_0~load_uint(64);
+    var v'status = sc_0~load_int(1);
+    var v'index = sc_0~load_uint(256);
+    return (sc_0, (v'query_id, v'status, v'index));
+}
+
+;;
+;; Type: TicketStatus
+;; Header: 0x0d7e60c0
+;; TLB: ticket_status#0d7e60c0 getRewards:bool query_id:uint64 = TicketStatus
+;;
+
+builder $TicketStatus$_store(builder build_0, (int, int) v) inline {
+    var (v'getRewards, v'query_id) = v;
+    build_0 = store_uint(build_0, 226386112, 32);
+    build_0 = build_0.store_int(v'getRewards, 1);
+    build_0 = build_0.store_uint(v'query_id, 64);
+    return build_0;
+}
+
+cell $TicketStatus$_store_cell((int, int) v) inline {
+    return $TicketStatus$_store(begin_cell(), v).end_cell();
+}
+
+((int, int)) $TicketStatus$_constructor_query_id_getRewards(int $query_id, int $getRewards) inline {
+    return ($getRewards, $query_id);
+}
+
+;;
+;; Type: ClaimReward
+;; Header: 0x6d200abf
+;; TLB: claim_reward#6d200abf query_id:uint64 index:uint256 = ClaimReward
+;;
+
+(slice, ((int, int))) $ClaimReward$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1830816447);
+    var v'query_id = sc_0~load_uint(64);
+    var v'index = sc_0~load_uint(256);
+    return (sc_0, (v'query_id, v'index));
+}
+
+;;
+;; Type: ClaimResponse
+;; Header: 0x2fa38b15
+;; TLB: claim_response#2fa38b15 query_id:uint64 winner:address match:uint8 = ClaimResponse
+;;
+
+(slice, ((int, slice, int))) $ClaimResponse$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 799247125);
+    var v'query_id = sc_0~load_uint(64);
+    var v'winner = sc_0~__tact_load_address();
+    var v'match = sc_0~load_uint(8);
+    return (sc_0, (v'query_id, v'winner, v'match));
+}
+
+;;
+;; Type: RoundData
+;; TLB: _ first:uint8 second:uint8 third:uint8 match:uint8 = RoundData
+;;
+
+(int, int, int, int) $RoundData$_to_external(((int, int, int, int)) v) inline {
+    var (v'first, v'second, v'third, v'match) = v; 
+    return (v'first, v'second, v'third, v'match);
+}
+
+((int, int, int, int)) $RoundData$_constructor_first_second_third_match(int $first, int $second, int $third, int $match) inline {
+    return ($first, $second, $third, $match);
+}
+
+;;
+;; Type: LotteryData
+;; TLB: _ nftCollection:address paymentToken:address = LotteryData
+;;
+
+(slice, slice) $LotteryData$_to_external(((slice, slice)) v) inline {
+    var (v'nftCollection, v'paymentToken) = v; 
+    return (v'nftCollection, v'paymentToken);
+}
+
+((slice, slice)) $LotteryData$_constructor_nftCollection_paymentToken(slice $nftCollection, slice $paymentToken) inline {
+    return ($nftCollection, $paymentToken);
+}
+
+;;
+;; Type: TokenWallet
+;;
+
+builder $TokenWallet$init$_store(builder build_0, (slice, slice, slice) v) inline {
+    var (v'owner, v'master, v'operator) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = __tact_store_address(build_0, v'master);
+    build_0 = __tact_store_address(build_0, v'operator);
+    return build_0;
+}
+
+(cell, cell) $TokenWallet$_init_child(cell sys', slice $owner, slice $master, slice $operator) inline_ref {
+    slice sc' = sys'.begin_parse();
+    cell source = sc'~load_dict();
+    cell contracts = new_dict();
+    
+    ;; Contract Code: TokenWallet
+    cell mine = __tact_dict_get_code(source, 56445);
+    contracts = __tact_dict_set_code(contracts, 56445, mine);
+    
+    ;; Build cell
+    builder b = begin_cell();
+    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
+    b = b.store_int(false, 1);
+    b = $TokenWallet$init$_store(b, ($owner, $master, $operator));
+    return (mine, b.end_cell());
+}
+
+;;
+;; Type: NftItem
+;;
+
+builder $NftItem$init$_store(builder build_0, (slice, int, slice) v) inline {
+    var (v'collection, v'index, v'operator) = v;
+    build_0 = __tact_store_address(build_0, v'collection);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = __tact_store_address(build_0, v'operator);
+    return build_0;
+}
+
+(cell, cell) $NftItem$_init_child(cell sys', slice $collection, int $index, slice $operator) inline_ref {
+    slice sc' = sys'.begin_parse();
+    cell source = sc'~load_dict();
+    cell contracts = new_dict();
+    
+    ;; Contract Code: NftItem
+    cell mine = __tact_dict_get_code(source, 31210);
+    contracts = __tact_dict_set_code(contracts, 31210, mine);
+    
+    ;; Build cell
+    builder b = begin_cell();
+    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
+    b = b.store_int(false, 1);
+    b = $NftItem$init$_store(b, ($collection, $index, $operator));
+    return (mine, b.end_cell());
+}
+
+;;
+;; Type: Lottery
+;;
+
+builder $Lottery$_store(builder build_0, (slice, slice, int, int) v) inline {
+    var (v'nftCollection, v'paymentToken, v'tokenBalance, v'ticketCounter) = v;
+    build_0 = __tact_store_address(build_0, v'nftCollection);
+    build_0 = __tact_store_address(build_0, v'paymentToken);
+    build_0 = build_0.store_int(v'tokenBalance, 257);
+    var build_1 = begin_cell();
+    build_1 = build_1.store_int(v'ticketCounter, 257);
+    build_0 = store_ref(build_0, build_1.end_cell());
+    return build_0;
+}
+
+(slice, ((slice, slice, int, int))) $Lottery$_load(slice sc_0) inline {
+    var v'nftCollection = sc_0~__tact_load_address();
+    var v'paymentToken = sc_0~__tact_load_address();
+    var v'tokenBalance = sc_0~load_int(257);
+    slice sc_1 = sc_0~load_ref().begin_parse();
+    var v'ticketCounter = sc_1~load_int(257);
+    return (sc_0, (v'nftCollection, v'paymentToken, v'tokenBalance, v'ticketCounter));
+}
+
+(slice, slice, int, int) $Lottery$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$Lottery$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        return $Lottery$_contract_init();
+    }
+}
+
+() $Lottery$_contract_store((slice, slice, int, int) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $Lottery$_store(b, v);
+    set_data(b.end_cell());
+}

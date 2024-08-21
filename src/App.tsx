@@ -5,16 +5,21 @@ import { useMainContract } from "./hooks/useMainContract";
 import { useTonConnect } from "./hooks/useTonConnect";
 import { fromNano } from "ton-core";
 function App() {
-  const [incrementValue, setIncrementValue] = useState(3);
+  const [nftId, setNftId] = useState(0);
+  const [nftAddress, setNftAddress] = useState<string>("");
   const {
-    contract_address,
-    counter_value,
-    recent_sender,
-    owner_address,
-    contract_balance,
-    sendIncrement,
-    sendDeposit,
-    sendWithdrawalRequest,
+    // contract_address,
+    // counter_value,
+    // recent_sender,
+    // owner_address,
+    // contract_balance,
+    // sendIncrement,
+    // sendDeposit,
+    // sendWithdrawalRequest,
+    checkTicket,
+    token_balance,
+    buyToken,
+    buyTicket,
   } = useMainContract();
 
   const { connected } = useTonConnect();
@@ -26,59 +31,54 @@ function App() {
       </div>
       <div>
         <div className="Card">
-          <b>Our contract Address</b>
-          <div className="Hint">{contract_address?.slice(0, 30) + "..."}</div>
-          <b>Recent Sender</b>
-          <div className="Hint">{recent_sender?.slice(0, 30) + "..."}</div>
-          <b>Owner Address</b>
-          <div className="Hint">{owner_address?.slice(0, 30) + "..."}</div>
-          <b>Сontract Balance</b>
-          {contract_balance && (
-            <div className="Hint">{fromNano(contract_balance)}</div>
+          <b>Token Balance</b>
+          {token_balance && (
+            <div className="Hint">{fromNano(token_balance)}</div>
           )}
         </div>
         <div className="Card">
-          <b>Counter Value</b>
-          <div>{counter_value ?? "Loading..."}</div>
+          <b>NFT data</b>
+          <div className="Hint">Lottery Numbers {fromNano(token_balance)}</div>
+          <div className="Hint">Matches {fromNano(token_balance)}</div>
         </div>
 
         <div className="Actions">
           <input
             type="number"
-            value={incrementValue}
-            onChange={(e) => setIncrementValue(Number(e.target.value))}
+            value={nftId}
+            onChange={(e) => setNftId(Number(e.target.value))}
             className="input-field"
           />
-          {connected && (
-            <a
-              onClick={() => {
-                sendIncrement(incrementValue);
-              }}
-              className="action-button increment-button"
-            >
-              Increment by {incrementValue}
-            </a>
-          )}
-          {connected && (
-            <a
-              onClick={() => {
-                sendDeposit();
-              }}
-              className="action-button deposit-button"
-            >
-              Request deposit of 1 TON
-            </a>
-          )}
-          {connected && (
-            <a
-              onClick={() => {
-                sendWithdrawalRequest();
-              }}
-              className="action-button withdrawal-button"
-            >
-              Withdrawal founds from the contract
-            </a>
-          )}
+          <input
+            type="string"
+            value={nftAddress}
+            onChange={(e) => setNftAddress(e.target.value)}
+            className="input-field"
+          />
+          <a
+            onClick={() => {
+              buyToken();
+            }}
+            className="action-button withdrawal-button"
+          >
+            Buy Token
+          </a>
+          <a
+            onClick={() => {
+              buyTicket();
+            }}
+            className="action-button withdrawal-button"
+          >
+            Buy Ticket
+          </a>
+          <a
+            onClick={() => {
+              checkTicket(nftId);
+            }}
+            className="action-button withdrawal-button"
+          >
+            Check Ticket
+          </a>
         </div>
       </div>
     </div>

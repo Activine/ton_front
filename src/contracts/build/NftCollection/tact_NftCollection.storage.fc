@@ -1,0 +1,189 @@
+;;
+;; Type: StateInit
+;; TLB: _ code:^cell data:^cell = StateInit
+;;
+
+((cell, cell)) $StateInit$_not_null(tuple v) inline {
+    throw_if(128, null?(v));
+    var (cell vvv'code, cell vvv'data) = __tact_tuple_destroy_2(v);
+    return (vvv'code, vvv'data);
+}
+
+;;
+;; Type: SendParameters
+;; TLB: _ bounce:bool to:address value:int257 mode:int257 body:Maybe ^cell code:Maybe ^cell data:Maybe ^cell = SendParameters
+;;
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_bounce_to_value_mode_body_code_data(int $bounce, slice $to, int $value, int $mode, cell $body, cell $code, cell $data) inline {
+    return ($bounce, $to, $value, $mode, $body, $code, $data);
+}
+
+((int, slice, int, int, cell, cell, cell)) $SendParameters$_constructor_to_value_mode_bounce_data_code_body(slice $to, int $value, int $mode, int $bounce, cell $data, cell $code, cell $body) inline {
+    return ($bounce, $to, $value, $mode, $body, $code, $data);
+}
+
+;;
+;; Type: Deploy
+;; Header: 0x946a98b6
+;; TLB: deploy#946a98b6 queryId:uint64 = Deploy
+;;
+
+(slice, ((int))) $Deploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 2490013878);
+    var v'queryId = sc_0~load_uint(64);
+    return (sc_0, (v'queryId));
+}
+
+;;
+;; Type: DeployOk
+;; Header: 0xaff90f57
+;; TLB: deploy_ok#aff90f57 queryId:uint64 = DeployOk
+;;
+
+builder $DeployOk$_store(builder build_0, (int) v) inline {
+    var (v'queryId) = v;
+    build_0 = store_uint(build_0, 2952335191, 32);
+    build_0 = build_0.store_uint(v'queryId, 64);
+    return build_0;
+}
+
+cell $DeployOk$_store_cell((int) v) inline {
+    return $DeployOk$_store(begin_cell(), v).end_cell();
+}
+
+((int)) $DeployOk$_constructor_queryId(int $queryId) inline {
+    return ($queryId);
+}
+
+;;
+;; Type: NftDeploy
+;; Header: 0xf1939aec
+;; TLB: nft_deploy#f1939aec index:uint256 owner:address content:^cell operator:address = NftDeploy
+;;
+
+builder $NftDeploy$_store(builder build_0, (int, slice, cell, slice) v) inline {
+    var (v'index, v'owner, v'content, v'operator) = v;
+    build_0 = store_uint(build_0, 4052982508, 32);
+    build_0 = build_0.store_uint(v'index, 256);
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = build_0.store_ref(v'content);
+    build_0 = __tact_store_address(build_0, v'operator);
+    return build_0;
+}
+
+cell $NftDeploy$_store_cell((int, slice, cell, slice) v) inline {
+    return $NftDeploy$_store(begin_cell(), v).end_cell();
+}
+
+((int, slice, cell, slice)) $NftDeploy$_constructor_index_owner_content_operator(int $index, slice $owner, cell $content, slice $operator) inline {
+    return ($index, $owner, $content, $operator);
+}
+
+;;
+;; Type: RequestNftDeploy
+;; Header: 0x5412742a
+;; TLB: request_nft_deploy#5412742a index:uint256 amount:coins owner:address content:^cell = RequestNftDeploy
+;;
+
+(slice, ((int, int, slice, cell))) $RequestNftDeploy$_load(slice sc_0) inline {
+    throw_unless(129, sc_0~load_uint(32) == 1410495530);
+    var v'index = sc_0~load_uint(256);
+    var v'amount = sc_0~load_coins();
+    var v'owner = sc_0~__tact_load_address();
+    var v'content = sc_0~load_ref();
+    return (sc_0, (v'index, v'amount, v'owner, v'content));
+}
+
+;;
+;; Type: CollectionData
+;; TLB: _ next_index:int257 content:^cell owner:address = CollectionData
+;;
+
+(int, cell, slice) $CollectionData$_to_external(((int, cell, slice)) v) inline {
+    var (v'next_index, v'content, v'owner) = v; 
+    return (v'next_index, v'content, v'owner);
+}
+
+((int, cell, slice)) $CollectionData$_constructor_next_index_content_owner(int $next_index, cell $content, slice $owner) inline {
+    return ($next_index, $content, $owner);
+}
+
+;;
+;; Type: NftItem
+;;
+
+builder $NftItem$init$_store(builder build_0, (slice, int, slice) v) inline {
+    var (v'collection, v'index, v'operator) = v;
+    build_0 = __tact_store_address(build_0, v'collection);
+    build_0 = build_0.store_int(v'index, 257);
+    build_0 = __tact_store_address(build_0, v'operator);
+    return build_0;
+}
+
+(cell, cell) $NftItem$_init_child(cell sys', slice $collection, int $index, slice $operator) inline_ref {
+    slice sc' = sys'.begin_parse();
+    cell source = sc'~load_dict();
+    cell contracts = new_dict();
+    
+    ;; Contract Code: NftItem
+    cell mine = __tact_dict_get_code(source, 31210);
+    contracts = __tact_dict_set_code(contracts, 31210, mine);
+    
+    ;; Build cell
+    builder b = begin_cell();
+    b = b.store_ref(begin_cell().store_dict(contracts).end_cell());
+    b = b.store_int(false, 1);
+    b = $NftItem$init$_store(b, ($collection, $index, $operator));
+    return (mine, b.end_cell());
+}
+
+;;
+;; Type: NftCollection
+;;
+
+builder $NftCollection$_store(builder build_0, (slice, slice, int, cell) v) inline {
+    var (v'owner, v'operator, v'next_index, v'content) = v;
+    build_0 = __tact_store_address(build_0, v'owner);
+    build_0 = __tact_store_address(build_0, v'operator);
+    build_0 = build_0.store_uint(v'next_index, 256);
+    build_0 = build_0.store_ref(v'content);
+    return build_0;
+}
+
+(slice, ((slice, slice, int, cell))) $NftCollection$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'operator = sc_0~__tact_load_address();
+    var v'next_index = sc_0~load_uint(256);
+    var v'content = sc_0~load_ref();
+    return (sc_0, (v'owner, v'operator, v'next_index, v'content));
+}
+
+(slice, ((slice, cell, slice))) $NftCollection$init$_load(slice sc_0) inline {
+    var v'owner = sc_0~__tact_load_address();
+    var v'content = sc_0~load_ref();
+    var v'operator = sc_0~__tact_load_address();
+    return (sc_0, (v'owner, v'content, v'operator));
+}
+
+(slice, slice, int, cell) $NftCollection$_contract_load() impure inline_ref {
+    slice $sc = get_data().begin_parse();
+    __tact_context_sys = $sc~load_ref();
+    int $loaded = $sc~load_int(1);
+    if ($loaded) {
+        return $sc~$NftCollection$_load();
+    } else {
+        ;; Allow only workchain deployments
+        throw_unless(137, my_address().preload_uint(11) == 1024);
+        (slice $owner, cell $content, slice $operator) = $sc~$NftCollection$init$_load();
+        $sc.end_parse();
+        return $NftCollection$_contract_init($owner, $content, $operator);
+    }
+}
+
+() $NftCollection$_contract_store((slice, slice, int, cell) v) impure inline {
+    builder b = begin_cell();
+    b = b.store_ref(__tact_context_sys);
+    b = b.store_int(true, 1);
+    b = $NftCollection$_store(b, v);
+    set_data(b.end_cell());
+}

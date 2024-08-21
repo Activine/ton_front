@@ -1,10 +1,16 @@
 import { useEffect, useState } from "react";
 import { MainContract } from "../contracts/MainContract";
+import { Lottery } from "../contracts/Lottery";
+import { TokenMaster } from "../contracts/Master";
+import { TokenWallet } from "../contracts/Wallet";
+import { NftItem } from "../contracts/NftItem";
 import { useTonClient } from "./useTonClient";
 import { useAsyncInitialize } from "./useAsyncInitialize";
 import { Address, OpenedContract } from "ton-core";
 import { toNano } from "ton-core";
 import { useTonConnect } from "./useTonConnect";
+import { toNano, address, beginCell, Cell } from "@ton/core";
+import { useTonAddress } from "@tonconnect/ui-react";
 
 export function useMainContract() {
   const client = useTonClient();
@@ -13,59 +19,108 @@ export function useMainContract() {
   const sleep = (time: number) =>
     new Promise((resolve) => setTimeout(resolve, time));
 
-  const [contractData, setContractData] = useState<null | {
-    counter_value: number;
-    recent_sender: string;
-    owner_address: string;
-  }>();
+  const [tokenBalance, setTokenBalance] = useState<number>(0);
 
-  const [balance, setBalance] = useState<number>(0);
+  const userFriendlyAddress = useTonAddress();
 
-  const mainContract = useAsyncInitialize(async () => {
+  const lotteryContract = useAsyncInitialize(async () => {
     if (!client) return;
-    const contract = new MainContract(
-      Address.parse("EQDpnTstCh_Wqk-BVg2ZQii1iwBPVMiCDEWh3wjHeIBPpgkD") // replace with your address from tutorial 2 step 8
+    const contract = new Lottery(
+      Address.parse("EQDeaZ1X1c0PZi4G68YHEzlV3i4GnbBu4RIZbesfnHFF3HRV") // replace with your address from tutorial 2 step 8
     );
-    return client.open(contract) as OpenedContract<MainContract>;
+    return client.open(contract) as OpenedContract<Lottery>;
+  }, [client]);
+
+  const jettonContract = useAsyncInitialize(async () => {
+    if (!client) return;
+    const contract = new TokenMaster(
+      Address.parse("EQD6cf_tfwgbt6sFX3fbv7C0z3dEtSyIvVrlCl7opl8JaGd_")
+    );
+    return client.open(contract) as OpenedContract<TokenMaster>;
+  }, [client]);
+
+  const userJettonContract = useAsyncInitialize(async () => {
+    if (!client) return;
+    const contract = new TokenWallet(
+      Address.parse("kQDrz2SzxK-nlUiQlyH_eYcPLJWVxINP5uQ-jgtKVM5HbeF7") // replace with your address from tutorial 2 step 8
+    );
+    return client.open(contract) as OpenedContract<TokenWallet>;
+  }, [client]);
+
+  const userNftContract = useAsyncInitialize(async () => {
+    if (!client) return;
+    const contract = new NftItem(
+      Address.parse("") // replace with your address from tutorial 2 step 8
+    );
+    return client.open(contract) as OpenedContract<NftItem>;
   }, [client]);
 
   useEffect(() => {
-    async function getValue() {
-      if (!mainContract) return;
-      setContractData(null);
-      const val = await mainContract.getData();
-      const balance = await mainContract.getBalance();
-      setBalance(balance);
-      setContractData({
-        counter_value: val.number,
-        recent_sender: val.recent_sender.toString(),
-        owner_address: val.owner_address.toString(),
-      });
+    async function getLotteryValue() {
+      console.log("userFriendlyAddress", userFriendlyAddress);
 
-      console.log(balance);
-      console.log(val.recent_sender.toString());
-      console.log(val.owner_address.toString());
-      await sleep(10000); // sleep 5 seconds and poll value again
-      getValue();
+      const userJettonAddress = await jettonContract.getGetWalletAddress(
+        address(userFriendlyAddress)
+      );
+
+      console.log("userJettonAddress", userJettonAddress);
+      console.log("jettonContract", jettonContract);
+
+      const tokenBalance = (await userJettonContract.getGetWalletData())
+        .balance;
+      setTokenBalance(tokenBalance);
+      console.log("tokenBalance", tokenBalance);
+      await sleep(90000); // sleep 5 seconds and poll value again
+
+      getLotteryValue();
     }
-    getValue();
-  }, [mainContract]);
+    getLotteryValue();
+  }, [lotteryContract]);
 
   return {
-    contract_address: mainContract?.address.toString(),
-    contract_balance: balance,
-    ...contractData,
-    sendIncrement: async (value: number) => {
-      return mainContract?.sendIncrement(sender, toNano(0.05), value);
-    },
-    sendDeposit: async () => {
-      return mainContract?.sendDeposit(sender, toNano(1));
-    },
-    sendWithdrawalRequest: async () => {
-      return mainContract?.sendWithdrawalRequest(
+    token_balance: tokenBalance,
+    buyToken: async () => {
+      return lotteryContract?.send(
         sender,
-        toNano(0.05),
-        toNano(0.5)
+        { value: toNano("1.5") },
+        {
+          $$type: "BuyToken",
+          query_id: 14n,
+          amount: toNano("100"),
+          destination: address(userFriendlyAddress),
+          response_destination: address(userFriendlyAddress),
+          custom_payload: beginCell().endCell(),
+          forward_ton_amount: toNano("0.3"),
+        }
+      );
+    },
+
+    buyTicket: async () => {
+      return lotteryContract?.send(
+        sender,
+        { value: toNano("1") },
+        {
+          $$type: "BuyTicket",
+          query_id: 0n,
+          amount: toNano("5"),
+          destination: address(userFriendlyAddress),
+          response_destination: address(userFriendlyAddress),
+          custom_payload: beginCell().endCell(),
+          forward_ton_amount: toNano("0.1"),
+          contentNft: beginCell().endCell(),
+          value: toNano("0.1"),
+        }
+      );
+    },
+    checkTicket: async (id: number) => {
+      return lotteryContract?.send(
+        sender,
+        { value: toNano("0.1") },
+        {
+          $$type: "CheckTicket",
+          query_id: 0n,
+          index: id,
+        }
       );
     },
   };

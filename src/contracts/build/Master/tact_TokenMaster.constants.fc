@@ -1,0 +1,8 @@
+;; String "dump(owner_address)"
+slice __gen_slice_string_d5507295e5422b542a8026ae2c3ea0dae6e04135f2560522b6353ac38bbc6097() asm "B{b5ee9c7241010101001500002664756d70286f776e65725f616464726573732928f07725} B>boc <s PUSHSLICE";
+
+;; String "dump(myAddress())"
+slice __gen_slice_string_17f5cc66bdb68ae702a0f85bf5a37a5709b8cacb7353f52e41428ef18f8f3281() asm "B{b5ee9c7241010101001300002264756d70286d794164647265737328292976c8ae4b} B>boc <s PUSHSLICE";
+
+;; String "dump(self.operator)"
+slice __gen_slice_string_ea042f96869fd0b516caee598a2a4bc44912150366009d8cb05bb96aa7da9c29() asm "B{b5ee9c7241010101001500002664756d702873656c662e6f70657261746f72292ac5f045} B>boc <s PUSHSLICE";

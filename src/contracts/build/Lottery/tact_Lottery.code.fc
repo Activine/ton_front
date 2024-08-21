@@ -1,0 +1,289 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_Lottery.headers.fc";
+#include "tact_Lottery.stdlib.fc";
+#include "tact_Lottery.constants.fc";
+#include "tact_Lottery.storage.fc";
+
+;;
+;; Contract Lottery functions
+;;
+
+(slice, slice, int, int) $Lottery$_contract_init() impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = (null(), null(), 0, 0);
+    $self'nftCollection = my_address();
+    $self'paymentToken = my_address();
+    $self'tokenBalance = 0;
+    return ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter);
+}
+
+((slice, slice, int, int), ()) $Lottery$_fun_setReward((slice, slice, int, int) $self, int $match, slice $winner, int $queryId) impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = $self;
+    var ($init'code, $init'data) = $TokenWallet$_init_child(__tact_context_sys, my_address(), $self'paymentToken, my_address());
+    __tact_debug_str(__tact_int_to_string(1), __gen_slice_string_17f22badb508e64718e0e5513fe1bfcbab0e2964f2bbe0ebcd290125efe510fe(), "File contracts/lottery.tact:137:9:");
+    __tact_debug_str(__tact_int_to_string(1), __gen_slice_string_17f22badb508e64718e0e5513fe1bfcbab0e2964f2bbe0ebcd290125efe510fe(), "File contracts/lottery.tact:138:9:");
+    __tact_debug_str(__tact_int_to_string(1), __gen_slice_string_17f22badb508e64718e0e5513fe1bfcbab0e2964f2bbe0ebcd290125efe510fe(), "File contracts/lottery.tact:139:9:");
+    if (($match == 1)) {
+        $global_send($SendParameters$_constructor_to_body_value_mode($global_contractAddress(($init'code, $init'data)), $Transfer$_store_cell($Transfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount($queryId, 10000000000, $winner, $winner, null(), 0)), 100000000, 2));
+    } elseif (($match == 3)) {
+        $global_send($SendParameters$_constructor_to_body_value_mode($global_contractAddress(($init'code, $init'data)), $Transfer$_store_cell($Transfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount($queryId, 15000000000, $winner, $winner, null(), 0)), 100000000, 2));
+    }
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+((slice, slice, int, int), int) $Lottery$_fun_amountMatch((slice, slice, int, int) $self, int $a, int $b, int $c) impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = $self;
+    int $match = 0;
+    $match = (((($a == $b) ? 1 : 0) + (($a == $c) ? 1 : 0)) + (($b == $c) ? 1 : 0));
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), $match);
+}
+
+((slice, slice, int, int), (int, int, int, int)) $Lottery$_fun_threeRandom((slice, slice, int, int) $self) impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = $self;
+    int $one = $global_random(0, 10);
+    int $two = $global_random(0, 10);
+    int $three = $global_random(0, 10);
+    int $match = ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)~$Lottery$_fun_amountMatch($one, $two, $three);
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), $RoundData$_constructor_first_second_third_match($one, $two, $three, $match));
+}
+
+((slice, slice, int, int), int) $Lottery$_fun_random((slice, slice, int, int) $self) impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = $self;
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), $global_random(0, 10));
+}
+
+((slice, slice, int, int), (slice, slice)) $Lottery$_fun_lotteryData((slice, slice, int, int) $self) impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = $self;
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), $LotteryData$_constructor_nftCollection_paymentToken($self'nftCollection, $self'paymentToken));
+}
+
+((slice, slice, int, int), slice) $Lottery$_fun_paymentToken((slice, slice, int, int) $self) impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = $self;
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), $self'paymentToken);
+}
+
+((slice, slice, int, int), slice) $Lottery$_fun_nftCollection((slice, slice, int, int) $self) impure inline_ref {
+    var (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)) = $self;
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), $self'nftCollection);
+}
+
+;;
+;; Receivers of a Contract Lottery
+;;
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_SetData((slice, slice, int, int) $self, (slice, slice) $msg) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($msg'nftAddress, $msg'jettonAddress) = $msg;
+    $self'nftCollection = $msg'nftAddress;
+    $self'paymentToken = $msg'jettonAddress;
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_BuyToken((slice, slice, int, int) $self, (int, int, cell, int) $msg) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($msg'query_id, $msg'amount, $msg'custom_payload, $msg'forward_ton_amount) = $msg;
+    throw_unless(50956, ($Context$_get_value(__tact_context_get()) >= 1500000000));
+    $global_send($SendParameters$_constructor_to_body_value_mode($self'paymentToken, $Transfer$_store_cell($Transfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount($msg'query_id, 100000000000, __tact_context_get_sender(), __tact_context_get_sender(), $msg'custom_payload, $msg'forward_ton_amount)), 0, 64));
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_BuyTicket((slice, slice, int, int) $self, (int, int, slice, slice, cell, int, cell, int) $msg) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($msg'query_id, $msg'amount, $msg'destination, $msg'response_destination, $msg'custom_payload, $msg'forward_ton_amount, $msg'contentNft, $msg'value) = $msg;
+    var ($init'code, $init'data) = $TokenWallet$_init_child(__tact_context_sys, __tact_context_get_sender(), $self'paymentToken, my_address());
+    $self'tokenBalance = ($self'tokenBalance + $msg'amount);
+    $global_send($SendParameters$_constructor_to_body_value_mode($global_contractAddress(($init'code, $init'data)), $Transfer$_store_cell($Transfer$_constructor_query_id_amount_destination_response_destination_custom_payload_forward_ton_amount($msg'query_id, 5000000000, my_address(), my_address(), $msg'custom_payload, $msg'forward_ton_amount)), 400000000, 2));
+    var ($initNFT'code, $initNFT'data) = $NftItem$_init_child(__tact_context_sys, $self'nftCollection, $self'ticketCounter, my_address());
+    $global_send($SendParameters$_constructor_to_body_value_mode($self'nftCollection, $RequestNftDeploy$_store_cell($RequestNftDeploy$_constructor_index_amount_owner_content($self'ticketCounter, $msg'value, __tact_context_get_sender(), $msg'contentNft)), 500000000, 2));
+    $self'ticketCounter = ($self'ticketCounter + 1);
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_CheckTicket((slice, slice, int, int) $self, (int, int) $msg) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($msg'query_id, $msg'index) = $msg;
+    var ($initNFT'code, $initNFT'data) = $NftItem$_init_child(__tact_context_sys, $self'nftCollection, $msg'index, my_address());
+    $global_send($SendParameters$_constructor_to_body_value_mode($global_contractAddress(($initNFT'code, $initNFT'data)), $TicketStatus$_store_cell($TicketStatus$_constructor_query_id_getRewards($msg'query_id, false)), 0, 64));
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_GetTicketStatus((slice, slice, int, int) $self, (int, int, int) $msg) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($msg'query_id, $msg'status, $msg'index) = $msg;
+    if ((~ $msg'status)) {
+        var ($data'first, $data'second, $data'third, $data'match) = ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)~$Lottery$_fun_threeRandom();
+        var ($initNFT'code, $initNFT'data) = $NftItem$_init_child(__tact_context_sys, $self'nftCollection, $msg'index, my_address());
+        $global_send($SendParameters$_constructor_to_body_value_mode($global_contractAddress(($initNFT'code, $initNFT'data)), $SetLotteryData$_store_cell($SetLotteryData$_constructor_first_second_third_match($data'first, $data'second, $data'third, $data'match)), 0, 64));
+    }
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_ClaimReward((slice, slice, int, int) $self, (int, int) $msg) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($msg'query_id, $msg'index) = $msg;
+    var ($initNFT'code, $initNFT'data) = $NftItem$_init_child(__tact_context_sys, $self'nftCollection, $msg'index, my_address());
+    $global_send($SendParameters$_constructor_to_body_value_mode($global_contractAddress(($initNFT'code, $initNFT'data)), $TicketStatus$_store_cell($TicketStatus$_constructor_query_id_getRewards($msg'query_id, true)), 0, 64));
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_ClaimResponse((slice, slice, int, int) $self, (int, slice, int) $msg) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($msg'query_id, $msg'winner, $msg'match) = $msg;
+    ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)~$Lottery$_fun_setReward($msg'match, $msg'winner, $msg'query_id);
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+(((slice, slice, int, int)), ()) $Lottery$_internal_binary_Deploy((slice, slice, int, int) $self, (int) $deploy) impure inline {
+    var ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter) = $self;
+    var ($deploy'queryId) = $deploy;
+    ($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter)~$Lottery$_fun_notify($DeployOk$_store_cell($DeployOk$_constructor_queryId($deploy'queryId)));
+    return (($self'nftCollection, $self'paymentToken, $self'tokenBalance, $self'ticketCounter), ());
+}
+
+;;
+;; Get methods of a Contract Lottery
+;;
+
+_ %threeRandom() method_id(121835) {
+    var self = $Lottery$_contract_load();
+    var res = self~$Lottery$_fun_threeRandom();
+    return $RoundData$_to_external(res);
+}
+
+_ %random() method_id(92013) {
+    var self = $Lottery$_contract_load();
+    var res = self~$Lottery$_fun_random();
+    return res;
+}
+
+_ %amountMatch(int $a, int $b, int $c) method_id(67533) {
+    int $a = $a;
+    int $b = $b;
+    int $c = $c;
+    var self = $Lottery$_contract_load();
+    var res = self~$Lottery$_fun_amountMatch($a, $b, $c);
+    return res;
+}
+
+_ %lotteryData() method_id(100642) {
+    var self = $Lottery$_contract_load();
+    var res = self~$Lottery$_fun_lotteryData();
+    return $LotteryData$_to_external(res);
+}
+
+_ %paymentToken() method_id(125507) {
+    var self = $Lottery$_contract_load();
+    var res = self~$Lottery$_fun_paymentToken();
+    return res;
+}
+
+_ %nftCollection() method_id(102221) {
+    var self = $Lottery$_contract_load();
+    var res = self~$Lottery$_fun_nftCollection();
+    return res;
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract Lottery
+;;
+
+((slice, slice, int, int), int) $Lottery$_contract_router_internal((slice, slice, int, int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive SetData message
+    if (op == 1233384412) {
+        var msg = in_msg~$SetData$_load();
+        self~$Lottery$_internal_binary_SetData(msg);
+        return (self, true);
+    }
+    
+    ;; Receive BuyToken message
+    if (op == 283496184) {
+        var msg = in_msg~$BuyToken$_load();
+        self~$Lottery$_internal_binary_BuyToken(msg);
+        return (self, true);
+    }
+    
+    ;; Receive BuyTicket message
+    if (op == 3349641132) {
+        var msg = in_msg~$BuyTicket$_load();
+        self~$Lottery$_internal_binary_BuyTicket(msg);
+        return (self, true);
+    }
+    
+    ;; Receive CheckTicket message
+    if (op == 4236050538) {
+        var msg = in_msg~$CheckTicket$_load();
+        self~$Lottery$_internal_binary_CheckTicket(msg);
+        return (self, true);
+    }
+    
+    ;; Receive GetTicketStatus message
+    if (op == 708453207) {
+        var msg = in_msg~$GetTicketStatus$_load();
+        self~$Lottery$_internal_binary_GetTicketStatus(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ClaimReward message
+    if (op == 1830816447) {
+        var msg = in_msg~$ClaimReward$_load();
+        self~$Lottery$_internal_binary_ClaimReward(msg);
+        return (self, true);
+    }
+    
+    ;; Receive ClaimResponse message
+    if (op == 799247125) {
+        var msg = in_msg~$ClaimResponse$_load();
+        self~$Lottery$_internal_binary_ClaimResponse(msg);
+        return (self, true);
+    }
+    
+    ;; Receive Deploy message
+    if (op == 2490013878) {
+        var msg = in_msg~$Deploy$_load();
+        self~$Lottery$_internal_binary_Deploy(msg);
+        return (self, true);
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $Lottery$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$Lottery$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $Lottery$_contract_store(self);
+}

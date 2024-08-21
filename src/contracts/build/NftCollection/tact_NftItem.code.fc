@@ -1,0 +1,240 @@
+#pragma version =0.4.4;
+#pragma allow-post-modification;
+#pragma compute-asm-ltr;
+
+#include "tact_NftItem.headers.fc";
+#include "tact_NftItem.stdlib.fc";
+#include "tact_NftItem.storage.fc";
+
+;;
+;; Contract NftItem functions
+;;
+
+(int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $NftItem$_contract_init(slice $collection, int $index, slice $operator) impure inline_ref {
+    var (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards)) = (false, null(), null(), null(), null(), null(), false, $Numbers$_constructor_first_second_third_match(0, 0, 0, 0), false);
+    $self'collection = $collection;
+    $self'index = $index;
+    $self'owner = $self'collection;
+    $self'content = $global_emptyCell();
+    $self'operator = $self'collection;
+    return ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards);
+}
+
+((int, slice, slice, int, cell, slice, int, (int, int, int, int), int), (int, (int, int, int, int))) $NftItem$_fun_lottery_data((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self) impure inline_ref {
+    var (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards)) = $self;
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), $ItemLotteryData$_constructor_status_numbers($self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match)));
+}
+
+((int, slice, slice, int, cell, slice, int, (int, int, int, int), int), slice) $NftItem$_fun_owner((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self) impure inline_ref {
+    var (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards)) = $self;
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), $self'owner);
+}
+
+((int, slice, slice, int, cell, slice, int, (int, int, int, int), int), slice) $NftItem$_fun_operator((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self) impure inline_ref {
+    var (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards)) = $self;
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), $self'operator);
+}
+
+((int, slice, slice, int, cell, slice, int, (int, int, int, int), int), (int, int, slice, slice, cell)) $NftItem$_fun_get_nft_data((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self) impure inline_ref {
+    var (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards)) = $self;
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), $NftData$_constructor_deployed_index_collection_owner_content($self'deployed, $self'index, $self'collection, $self'owner, $self'content));
+}
+
+;;
+;; Receivers of a Contract NftItem
+;;
+
+(((int, slice, slice, int, cell, slice, int, (int, int, int, int), int)), ()) $NftItem$_internal_binary_NftDeploy((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self, (int, slice, cell, slice) $msg) impure inline {
+    var ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards) = $self;
+    var ($msg'index, $msg'owner, $msg'content, $msg'operator) = $msg;
+    throw_unless(23263, ( __tact_slice_eq_bits($self'collection, __tact_context_get_sender()) ));
+    throw_unless(44083, ($self'index == $msg'index));
+    throw_unless(50324, (~ $self'deployed));
+    $self'owner = $msg'owner;
+    $self'content = $msg'content;
+    $self'deployed = true;
+    $self'operator = $msg'operator;
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), ());
+}
+
+(((int, slice, slice, int, cell, slice, int, (int, int, int, int), int)), ()) $NftItem$_internal_binary_NftDestroy((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self, (int) $msg) impure inline {
+    var ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards) = $self;
+    var ($msg'query_id) = $msg;
+    throw_unless(42491, ( __tact_slice_eq_bits($self'owner, __tact_context_get_sender()) ));
+    $self'owner = my_address();
+    $global_send($SendParameters$_constructor_to_value_mode_body(__tact_context_get_sender(), 0, 128, $NftExcesses$_store_cell($NftExcesses$_constructor_query_id($msg'query_id))));
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), ());
+}
+
+(((int, slice, slice, int, cell, slice, int, (int, int, int, int), int)), ()) $NftItem$_internal_binary_SetLotteryData((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self, (int, int, int, int) $msg) impure inline {
+    var ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards) = $self;
+    var ($msg'first, $msg'second, $msg'third, $msg'match) = $msg;
+    throw_unless(39293, ( __tact_slice_eq_bits($self'operator, __tact_context_get_sender()) ));
+    if ((~ $self'ticketStatus)) {
+        $self'ticketStatus = true;
+        ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match) = $Numbers$_constructor_first_second_third_match($msg'first, $msg'second, $msg'third, $msg'match);
+    }
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), ());
+}
+
+(((int, slice, slice, int, cell, slice, int, (int, int, int, int), int)), ()) $NftItem$_internal_binary_TicketStatus((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self, (int, int) $msg) impure inline {
+    var ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards) = $self;
+    var ($msg'getRewards, $msg'query_id) = $msg;
+    if ($msg'getRewards) {
+        if (( (($self'numbers'match != 0)) ? ((~ $self'rewards)) : (false) )) {
+            $self'rewards = true;
+            ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards)~$NftItem$_fun_reply($ClaimResponse$_store_cell($ClaimResponse$_constructor_winner_match_query_id($self'owner, $self'numbers'match, $msg'query_id)));
+        }
+    } else {
+        ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards)~$NftItem$_fun_reply($GetTicketStatus$_store_cell($GetTicketStatus$_constructor_status_index_query_id($self'ticketStatus, $self'index, $msg'query_id)));
+    }
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), ());
+}
+
+(((int, slice, slice, int, cell, slice, int, (int, int, int, int), int)), ()) $NftItem$_internal_binary_NftTransfer((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self, (int, slice, slice, cell, int, slice) $msg) impure inline {
+    var ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards) = $self;
+    var ($msg'query_id, $msg'new_owner, $msg'response_destination, $msg'custom_payload, $msg'forward_amount, $msg'forward_payload) = $msg;
+    var ($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw) = __tact_context_get();
+    throw_unless(11850, $self'deployed);
+    throw_unless(42491, ( __tact_slice_eq_bits($self'owner, $ctx'sender) ));
+    int $min = (50000000 - min(50000000, __tact_my_balance()));
+    int $required = ((20000000 + $msg'forward_amount) + $min);
+    if (($msg'forward_amount != 0)) {
+        $required = ($required + $Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)));
+    }
+    throw_unless(30404, ($ctx'value >= $required));
+    int $cashback = ((($ctx'value - 20000000) - $msg'forward_amount) - $min);
+    if (($msg'forward_amount != 0)) {
+        $cashback = ($cashback - $Context$_fun_readForwardFee(($ctx'bounced, $ctx'sender, $ctx'value, $ctx'raw)));
+        $global_send($SendParameters$_constructor_to_value_mode_body($msg'new_owner, $msg'forward_amount, 1, $NftOwnershipAssigned$_store_cell($NftOwnershipAssigned$_constructor_query_id_prev_owner_forward_payload($msg'query_id, $self'owner, $msg'forward_payload))));
+    }
+    $self'owner = $msg'new_owner;
+    if (($cashback > 0)) {
+        $global_send($SendParameters$_constructor_to_value_body($msg'response_destination, $cashback, $NftExcesses$_store_cell($NftExcesses$_constructor_query_id($msg'query_id))));
+    }
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), ());
+}
+
+(((int, slice, slice, int, cell, slice, int, (int, int, int, int), int)), ()) $NftItem$_internal_binary_NftGetStaticData((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) $self, (int) $msg) impure inline {
+    var ($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards) = $self;
+    var ($msg'query_id) = $msg;
+    $global_send($SendParameters$_constructor_to_value_mode_body(__tact_context_get_sender(), 0, 64, $NftReportStaticData$_store_cell($NftReportStaticData$_constructor_query_id_index_collection($msg'query_id, $self'index, $self'collection))));
+    return (($self'deployed, $self'collection, $self'owner, $self'index, $self'content, $self'operator, $self'ticketStatus, ($self'numbers'first, $self'numbers'second, $self'numbers'third, $self'numbers'match), $self'rewards), ());
+}
+
+;;
+;; Get methods of a Contract NftItem
+;;
+
+_ %lottery_data() method_id(89811) {
+    var self = $NftItem$_contract_load();
+    var res = self~$NftItem$_fun_lottery_data();
+    return $ItemLotteryData$_to_external(res);
+}
+
+_ %owner() method_id(83229) {
+    var self = $NftItem$_contract_load();
+    var res = self~$NftItem$_fun_owner();
+    return res;
+}
+
+_ %operator() method_id(129896) {
+    var self = $NftItem$_contract_load();
+    var res = self~$NftItem$_fun_operator();
+    return res;
+}
+
+_ %get_nft_data() method_id(102351) {
+    var self = $NftItem$_contract_load();
+    var res = self~$NftItem$_fun_get_nft_data();
+    return $NftData$_to_external(res);
+}
+
+_ lazy_deployment_completed() method_id {
+    return get_data().begin_parse().load_int(1);
+}
+
+;;
+;; Routing of a Contract NftItem
+;;
+
+((int, slice, slice, int, cell, slice, int, (int, int, int, int), int), int) $NftItem$_contract_router_internal((int, slice, slice, int, cell, slice, int, (int, int, int, int), int) self, int msg_bounced, slice in_msg) impure inline_ref {
+    ;; Handle bounced messages
+    if (msg_bounced) {
+        return (self, true);
+    }
+    
+    ;; Parse incoming message
+    int op = 0;
+    if (slice_bits(in_msg) >= 32) {
+        op = in_msg.preload_uint(32);
+    }
+    
+    
+    ;; Receive NftDeploy message
+    if (op == 4052982508) {
+        var msg = in_msg~$NftDeploy$_load();
+        self~$NftItem$_internal_binary_NftDeploy(msg);
+        return (self, true);
+    }
+    
+    ;; Receive NftDestroy message
+    if (op == 520377210) {
+        var msg = in_msg~$NftDestroy$_load();
+        self~$NftItem$_internal_binary_NftDestroy(msg);
+        return (self, true);
+    }
+    
+    ;; Receive SetLotteryData message
+    if (op == 4066829817) {
+        var msg = in_msg~$SetLotteryData$_load();
+        self~$NftItem$_internal_binary_SetLotteryData(msg);
+        return (self, true);
+    }
+    
+    ;; Receive TicketStatus message
+    if (op == 226386112) {
+        var msg = in_msg~$TicketStatus$_load();
+        self~$NftItem$_internal_binary_TicketStatus(msg);
+        return (self, true);
+    }
+    
+    ;; Receive NftTransfer message
+    if (op == 1607220500) {
+        var msg = in_msg~$NftTransfer$_load();
+        self~$NftItem$_internal_binary_NftTransfer(msg);
+        return (self, true);
+    }
+    
+    ;; Receive NftGetStaticData message
+    if (op == 801842850) {
+        var msg = in_msg~$NftGetStaticData$_load();
+        self~$NftItem$_internal_binary_NftGetStaticData(msg);
+        return (self, true);
+    }
+    
+    return (self, false);
+}
+
+() recv_internal(int msg_value, cell in_msg_cell, slice in_msg) impure {
+    
+    ;; Context
+    var cs = in_msg_cell.begin_parse();
+    var msg_flags = cs~load_uint(4);
+    var msg_bounced = -(msg_flags & 1);
+    slice msg_sender_addr = __tact_verify_address(cs~load_msg_addr());
+    __tact_context = (msg_bounced, msg_sender_addr, msg_value, cs);
+    __tact_context_sender = msg_sender_addr;
+    
+    ;; Load contract data
+    var self = $NftItem$_contract_load();
+    
+    ;; Handle operation
+    int handled = self~$NftItem$_contract_router_internal(msg_bounced, in_msg);
+    
+    ;; Throw if not handled
+    throw_unless(130, handled);
+    
+    ;; Persist state
+    $NftItem$_contract_store(self);
+}
